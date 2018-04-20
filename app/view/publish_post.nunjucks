@@ -1,0 +1,89 @@
+{% extends 'layout.nunjucks' %}
+{% set page_title = '发布博客' %}
+{% set page_tab = 'publish_post' %}
+{% block page_css %}
+  <link rel="stylesheet" href="/public/libs/wangEditor/release/wangEditor.min.css">
+{% endblock %}
+
+{% block page_content %}
+  <div class="card mt-4">
+    <div class="card-body">
+      <form id="form" action="/save_post" method="post">
+        <input type="hidden" name="id" value="{{ post.id }}">
+        <div class="form-group">
+          <label for="title">标题</label>
+          <input type="text" name="title" id="title" value="{{ post.title }}" class="form-control" placeholder="标题">
+        </div>
+        <div class="form-group">
+          <label for="editor">内容</label>
+          <div id="editor">{{ post.content|safe }}</div>
+          <textarea name="content" id="content" hidden></textarea>
+        </div>
+        <div class="form-group">
+          <label for="categories">类别</label>
+          <input type="text" name="categories" id="categories" value="{{ post.categories }}" class="form-control" placeholder="类别">
+        </div>
+        <div class="form-group">
+          <label for="tags">标签</label>
+          <input type="text" name="tags" id="tags" value="{{ post.tags }}" class="form-control" placeholder="标签">
+        </div>
+        <button type="submit" class="btn btn-primary">发布</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block page_js %}
+  <script src="/public/libs/wangEditor/release/wangEditor.min.js"></script>
+  <script>
+    $(function() {
+      const E = window.wangEditor;
+      const editor = new E('#editor');
+      editor.customConfig.uploadFileName = 'file';
+      editor.customConfig.uploadImgServer = '/upload';
+      editor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'strikeThrough',  // 删除线
+        'link',  // 插入链接
+        'list',  // 列表
+        'quote',  // 引用
+        'emoticon',  // 表情
+        'image',  // 插入图片
+        'table',  // 表格
+        'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+      ];
+      editor.create();
+
+      $("#form").submit(function() {
+        const title = $("#title").val();
+        var contentHtml = editor.txt.html();
+        var contentText = editor.txt.text();
+        const categories = $("#categories").val();
+        const tags = $("#tags").val();
+        if(!title) {
+          toast('标题不能为空');
+          return false;
+        }
+        if(!contentText) {
+          toast('内容不能为空');
+          return false;
+        } else {
+          $("#content").val(contentHtml);
+        }
+        if(!categories) {
+          toast('类别不能为空');
+          return false;
+        }
+        if(!tags) {
+          toast('标签不能为空');
+          return false;
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'layout.nunjucks' %}
+{% set page_title = post.title %}
+{% set page_tab = 'post' %}
+{% block page_css %}
+{% endblock %}
+
+{% block page_content %}
+  <div class="card mt-4">
+    {% if post.title %}
+      <div class="card-body">
+        <h4>{{ post.title }}</h4>
+        <small class="d-block mb-2">
+          <i class="fas fa-user"></i> {{ post.author }}&nbsp;
+          <i class="fas fa-calendar-alt "></i> {{ moment(post.date).fromNow() }}&nbsp;
+          <i class="fas fa-list "></i> {% for category in post.categories.split(',') %}{{ category }}&nbsp;{% endfor %}
+          <i class="fas fa-tags "></i> {% for tag in post.tags.split(',') %}{{ tag }}&nbsp;{% endfor %}
+        </small>
+        <p>{{ post.content|safe }}</p>
+      </div>
+    {% else %}
+      <div class="card-body">
+        博客不存在
+      </div>
+    {% endif %}
+  </div>
+  {% if config.disqus %}
+    <div class="card mt-4">
+      <div class="card-header">添加评论</div>
+      <div class="card-body">
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments
+            powered by Disqus.</a></noscript>
+      </div>
+    </div>
+    <script>
+      (function () {
+        const d = document,
+          s = d.createElement('script');
+        s.src = '//{{ config.disqus }}.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
