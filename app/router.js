@@ -22,6 +22,6 @@ module.exports = app => {
   router.get('/login', user.toLogin);
   router.post('/login', user.login)
 
-  app.router.get('/logout', user.logout);
+  router.get('/logout', user.logout);
 
 };
